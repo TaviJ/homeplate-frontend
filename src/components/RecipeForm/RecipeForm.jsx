@@ -1,19 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useParams } from 'react-router';
+import * as recipeService from '../../services/recipeService';
 
 
-const RecipeForm =({handleAddRecipe})=>{
-    const [formData, setFormData] = useState({
-        title: '',
-        description:'',
-        imageUrl: '',
-        prepTime: '',
-        difficultyLevel: 'Easy',
-        tags:'',
-        typeRecipe:'Breakfast',
-        servings:1,
-        ingredients: [{ nameIngredient: "", unitQuantity: "" }],
-        steps: [{ stepNumber: 1, stepTitle: "", stepDescription: "" }],
-    })
+const initialState = {
+    title: '',
+    description:'',
+    imageUrl: '',
+    prepTime: '',
+    difficultyLevel: 'Easy',
+    tags:'',
+    typeRecipe:'Breakfast',
+    servings:1,
+    ingredients: [{ nameIngredient: "", unitQuantity: "" }],
+    steps: [{ stepNumber: 1, stepTitle: "", stepDescription: "" }],
+}
+
+const RecipeForm =({handleAddRecipe, handleUpdateRecipe})=>{
+    const {recipeId} = useParams();
+
+    const [formData, setFormData] = useState(initialState)
 
     const handleChange =(evt) =>{
         setFormData({...formData,[evt.target.name]:evt.target.value})
@@ -21,7 +27,12 @@ const RecipeForm =({handleAddRecipe})=>{
 
     const hadleSubmit = (evt) =>{
         evt.preventDefault()
-        handleAddRecipe(formData);
+        if (recipeId){
+            handleUpdateRecipe(recipeId,formData)
+        }else{
+            
+            handleAddRecipe(formData);
+        }
     }
 
     const addIngredient = () =>{
@@ -72,8 +83,22 @@ const RecipeForm =({handleAddRecipe})=>{
         })
     }
 
+    useEffect(()=>{
+        const fetchRecipe = async () =>{
+            const recipeData = await recipeService.show(recipeId);
+            setFormData({...recipeData, tags: Array.isArray(recipeData.tags) ? recipeData.tags.join(", ") : recipeData.tags,
+    });
+        };
+        if (recipeId) fetchRecipe()
+
+        return () => setFormData(initialState)
+    },[recipeId])
+
+
+
     return(
         <main>
+            <h1>{recipeId ? 'Edit Recipe' : 'Create new Recipe'}</h1>
             <form onSubmit={hadleSubmit}>
                 <div>
 
@@ -237,7 +262,7 @@ const RecipeForm =({handleAddRecipe})=>{
 
                 </div>
 
-                <button type='submit'>CREATE RECIPE</button>
+                <button type='submit'>{recipeId ? 'EDIT RECIPE': 'CREATE RECIPE'}</button>
             </form>
         </main>
     )
