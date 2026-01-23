@@ -6,6 +6,8 @@ import * as recipeService from './services/recipeService'
 import Homepage from './components/Homepage/Homepage';
 import RecipeDetails from './components/RecipeDetails/RecipeDetails';
 import RecipeForm from './components/RecipeForm/RecipeForm';
+import CommentForm from './components/CommentForm/CommentForm';
+
 import './App.css'
 
 
@@ -67,7 +69,7 @@ const App = () => {
 
   const handleUpdateRecipe = async (recipeId, recipeFormData) => {
     const payload= buildPayload(recipeFormData);
-    const updatedRecipe = await recipeService.udpate(recipeId,payload)
+    const updatedRecipe = await recipeService.update(recipeId,payload)
     setRecipes(recipes.map((recipe)=>(recipeId === recipe._id? updatedRecipe:recipe)))
     navigate(`/recipes/${recipeId}`);
   };
@@ -79,7 +81,6 @@ const App = () => {
         <Route path='/recipes/new' element={<RecipeForm handleAddRecipe={handleAddRecipe} />}/>
         <Route path='/recipes/:recipeId' element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe}/>}/>
         <Route path='/recipes/:recipeId/edit' element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe}/>}/>
-        
       </Routes>
     </>
   );
