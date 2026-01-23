@@ -25,7 +25,12 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
 
     const handleAddComment = async (commentFormData) =>{
         const newComment = await recipeService.createComment(recipeId, commentFormData);
-        setRecipe({...recipe, comments:[...recipe.comments, newComment]});
+        setRecipe({...recipe, comments:[newComment, ...recipe.comments]});
+    }
+
+    const handleDeleteComment = async(commentId)=>{
+        await recipeService.deleteComment(recipeId,commentId)
+        setRecipe({...recipe, comments: recipe.comments.filter((comment)=> commentId !== comment._id)})
     }
 
     return (
@@ -59,6 +64,12 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
                     </p>
                 </header>
                 <p>{comment.text}</p>
+
+                {/* <> */}
+                    <Link to={`/recipes/${recipeId}/comments/${comment._id}/edit`}>Edit</Link>
+                    <button onClick={()=> handleDeleteComment(comment._id)}>Delete</button>
+                {/* </> */}
+                {/* )} */}
             </article>
        ))}
       </section>

@@ -87,11 +87,29 @@ const createComment = async (recipeId,commentFormData)=>{
     }
 
 }
+
+
+const deleteComment = async (recipeId,commentId)=>{
+    try{   
+        const res= await fetch(`${BASE_URL}/${recipeId}/comments/${commentId}`, {
+            method:"DELETE",
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            }
+        })
+        return res.json();
+    }catch(err){
+        console.log(err)
+    }
+
+}
+
 export{
     index,
     show,
     create,
     deleteRecipe,
     udpate,
-    createComment
+    createComment,
+    deleteComment
 }
