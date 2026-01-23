@@ -2,6 +2,9 @@ import { useParams, Link } from 'react-router';
 import { useState, useEffect, /*useContext*/ } from 'react';
 import * as recipeService from '../../services/recipeService';
 
+import CommentForm from '../CommentForm/CommentForm';
+
+
 // import { UserContext } from '../../contexts/UserContext';
 
 
@@ -18,8 +21,13 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
         }
         fetchRecipe();
     },[recipeId])
+    if (!recipe) return <main>Loading...</main>;
 
-     if (!recipe) return <main>Loading...</main>;
+    const handleAddComment = async (commentFormData) =>{
+        const newComment = await recipeService.createComment(recipeId, commentFormData);
+        setRecipe({...recipe, comments:[...recipe.comments, newComment]});
+    }
+
     return (
     <main>
       <section>
@@ -40,9 +48,10 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
       </section>
       <section>
         <h2>Comments</h2>
+        <CommentForm handleAddComment={handleAddComment}/>
         {!recipe.comments.length && <p> There are no comments. <br/>Be the first to comment</p>}
 
-        {recipe.comments.map((comment)=>{
+        {recipe.comments.map((comment)=>(
             <article key={comment._id}>
                 <header>
                     <p>
@@ -51,7 +60,7 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
                 </header>
                 <p>{comment.text}</p>
             </article>
-        })}
+       ))}
       </section>
     </main>
   );
