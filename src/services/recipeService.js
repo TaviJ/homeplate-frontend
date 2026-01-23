@@ -38,8 +38,25 @@ const create = async (recipeFormData)=>{
         console.log(err)
     }
 }
+
+const deleteRecipe = async (recipeId)=>{
+    try{
+        const res = await fetch(`${BASE_URL}/${recipeId}`,{
+            method:'DELETE',
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        return res.json();
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
 export{
     index,
     show,
-    create
+    create,
+    deleteRecipe
 }
