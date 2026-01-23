@@ -40,6 +40,18 @@ const RecipeDetails = ({handleDeleteRecipe}) =>{
       </section>
       <section>
         <h2>Comments</h2>
+        {!recipe.comments.length && <p> There are no comments. <br/>Be the first to comment</p>}
+
+        {recipe.comments.map((comment)=>{
+            <article key={comment._id}>
+                <header>
+                    <p>
+                        {`${comment.author.username} posted on ${new Date(comment.createdAt).toLocaleDateString()}`}
+                    </p>
+                </header>
+                <p>{comment.text}</p>
+            </article>
+        })}
       </section>
     </main>
   );
