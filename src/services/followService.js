@@ -41,7 +41,7 @@ const unfollowUser = async (userId) =>{
     }
 }
 
-const getMyFollowing = async() =>{
+const getMyFollowing = async () =>{
     try{
         const res = await fetch(`${BASE_URL}/me/following`,{
             method:'GET',
@@ -60,8 +60,28 @@ const getMyFollowing = async() =>{
     }
 }
 
+const getMyFollowers = async ()=>{
+    try{
+        const res = await fetch(`${BASE_URL}/me/followers`,{
+            method:'GET',
+            headers:{
+                Authorization:`Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.err || 'Failed to retrieve followers');
+        }
+        return res.json()
+    }catch(err){
+        console.log(err)
+        throw err;
+    }
+}
+
 export{
     followUser,
     unfollowUser,
-    getMyFollowing
+    getMyFollowing,
+    getMyFollowers
 }
