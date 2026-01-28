@@ -6,7 +6,7 @@ return(
 
 <main>
 
-    this i sthe profile page 
+    this is the profile page 
 </main>
 
 )

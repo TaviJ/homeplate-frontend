@@ -13,7 +13,7 @@ import SignInForm from './components/SignInForm/SignInForm';
 import NavBar from './components/NavBar/NavBar';
 import { UserContext } from './contexts/UserContext';
 import ProfilePage from './components/ProfilePage/ProfilePage';
-import Followers from './components/Followers/Followers';
+import Follow from './components/Follow/Follow';
 
 
 
@@ -94,7 +94,7 @@ const App = () => {
             <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} />} />
             <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
             <Route path="/profile" element={<ProfilePage />} />
-             <Route path="/followers" element={<Followers />} />
+             <Route path="/follow" element={<Follow />} />
           </>  
           ):(
           <>

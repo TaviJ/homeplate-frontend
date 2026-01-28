@@ -4,7 +4,7 @@ const RecipeList = ({recipes}) =>{
     return (
         <main>
             {
-                recipes.map((recipe)=>(
+                recipes.length>0 && recipes.map((recipe)=>( 
                     <Link key={recipe._id} to = {`/recipes/${recipe._id}`}>
                         <article>
                             <header>

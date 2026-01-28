@@ -19,7 +19,7 @@ const NavBar = () => {
           <li><Link to="/profile">Profile</Link></li>
           <li><Link to="/add-recipe">Add New Recipe</Link></li>
           <li><Link to="/my-recipes">My Recipes</Link></li>
-          <li><Link to="/followers">Followers & Following</Link></li>
+          <li><Link to="/follow">Followers & Following</Link></li>
           <li>
             <Link to="/" onClick={handleSignOut}>Sign Out</Link>
           </li>
