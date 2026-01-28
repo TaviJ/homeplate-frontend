@@ -13,6 +13,7 @@ import SignInForm from './components/SignInForm/SignInForm';
 import NavBar from './components/NavBar/NavBar';
 import { UserContext } from './contexts/UserContext';
 import ProfilePage from './components/ProfilePage/ProfilePage';
+import Followers from './components/Followers/Followers';
 
 
 
@@ -87,10 +88,13 @@ const App = () => {
       <Route path="/" element={user ? <Homepage recipes={recipes}/> :<PublicHome />} />
           {user ? (
           <>
-            <Route path='/recipes' element={<Homepage recipes={recipes}/>}/>
-            <Route path='/recipes/new' element={<RecipeForm handleAddRecipe={handleAddRecipe} />}/>
-            <Route path='/recipes/:recipeId' element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe}/>}/>
-            <Route path='/recipes/:recipeId/edit' element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe}/>}/>
+            <Route path="/home" element={<Homepage recipes={recipes} />} />
+            <Route path="/add-recipe" element={<RecipeForm handleAddRecipe={handleAddRecipe} />} />
+            <Route path="/my-recipes" element={<Homepage recipes={recipes} />} />
+            <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} />} />
+            <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
+            <Route path="/profile" element={<ProfilePage />} />
+             <Route path="/followers" element={<Followers />} />
           </>  
           ):(
           <>
