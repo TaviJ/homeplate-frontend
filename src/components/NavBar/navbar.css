@@ -1,0 +1,61 @@
+.nav-link, .nav-logo{
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #285730;
+    width: 100%;
+}
+
+.nav-logo{
+    margin-bottom: 20%;
+}
+
+.nav-link.active{
+    font-weight: 600;
+    background-color: #285730;
+    color: white;
+    width: 90%;
+    text-align: start;
+}
+
+.nav-list,.nav-user{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: baseline;
+    width: 100%;
+    text-align: left;
+}
+
+.sidebar{
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 240px;
+    padding: 16px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7), 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.logo{
+    font-size: 35px;
+}
+
+.ul-nav{
+    padding-inline-start: 0;
+}
+
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+
+.app-content {
+  margin: 0;
+}
