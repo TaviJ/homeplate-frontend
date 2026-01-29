@@ -13,11 +13,11 @@
     border-radius: 5px;
     width: 75px;
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.20);
-    color: #103f3c;
+    color: #285730;
 }
 
 .selected{
-    background-color: #103f3c;
+    background-color: #285730;
     color: white;
 }
 
