@@ -2,9 +2,10 @@ import { Routes, Route, useNavigate } from 'react-router';
 import { useEffect, useState, useContext} from 'react';
 
 import * as recipeService from './services/recipeService'
+import * as followService from './services/followService'
 
 import PublicHome from "./components/PublicHome/PublicHome";
-import Homepage from './components/Homepage/Homepage';
+import RecipeList from './components/RecipeList/RecipeList';
 import RecipeDetails from './components/RecipeDetails/RecipeDetails';
 import RecipeForm from './components/RecipeForm/RecipeForm';
 import SignUpForm from './components/SignUpForm/SignUpForm';
@@ -15,12 +16,12 @@ import ProfilePage from './components/ProfilePage/ProfilePage';
 import Followers from './components/Follow/Follow';
 import './App.css'
 
-
-
 const App = () => {
   const {user} = useContext(UserContext);
+  const userId =user?._id;
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([])
+  const [followingIds, setFollowingIds] = useState(new Set());
 
   useEffect(()=>{
     const fetchAllRecipes = async () =>{
@@ -29,6 +30,26 @@ const App = () => {
     }
     fetchAllRecipes()
   },[])
+
+  useEffect(()=>{
+    const fetchMyFollowing = async () =>{
+      if(!userId){
+        setFollowingIds(new Set());
+          return;
+      }
+    
+      try{
+        const data = await followService.getMyFollowing();
+        const followingList = new Set(data.following.map(following => following._id));
+          setFollowingIds(followingList)
+      }catch(err){
+        console.log(err)
+      }
+    }
+  
+    fetchMyFollowing();
+
+  },[userId])
 
   const buildPayload= (recipeFormData) => {
     const normalizedTags = Array.isArray(recipeFormData.tags)
@@ -80,32 +101,70 @@ const App = () => {
     navigate(`/recipes/${recipeId}`);
   };
 
-    return(
-        <>
-          <NavBar />
-          <Routes>
-            
-      <Route path="/" element={user ? <Homepage recipes={recipes}/> :<PublicHome />} />
-          {user ? (
-          <>
-            <Route path="/home" element={<Homepage recipes={recipes} />} />
-            <Route path="/add-recipe" element={<RecipeForm handleAddRecipe={handleAddRecipe} />} />
-            <Route path="/my-recipes" element={<Homepage recipes={recipes} />} />
-            <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} />} />
-            <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
-            <Route path="/profile" element={<ProfilePage />} />
-             <Route path="/followers" element={<Followers />} />
-          </>  
-          ):(
-          <>
-            <Route path='/sign-up' element={<SignUpForm />} />
-            <Route path="/sign-in" element={<SignInForm />} />
-          </>
-          )}
-          </Routes>
-      </>
-    );
+  const toggleLike = async (recipeId, shouldLike) => {
+      if (shouldLike) return recipeService.addLike(recipeId);     
+      return recipeService.deleteLike(recipeId);                  
   };
+
+  const handleFollow = async (targetUserId, shouldFollow) => {
+          setFollowingIds(prev =>{
+              const next = new Set(prev);
+              if(shouldFollow){
+                  next.add(targetUserId)
+              }else{
+                  next.delete(targetUserId)
+              }
+              return next;
+          })
+  
+          try {
+              if (shouldFollow) {
+                  await followService.followUser(targetUserId);
+              }else{
+                  await followService.unfollowUser(targetUserId);
+                  
+              }
+          } catch (err) {
+              setFollowingIds(prev =>{
+                  const next = new Set(prev);
+                  if (shouldFollow){
+                      next.delete(targetUserId)
+                  }else{
+                      next.add(targetUserId);
+                  }
+                  return next;
+              })
+              console.log(err);
+              throw err; 
+          }
+      };
+
+
+  return user ? (
+    <div className="app-layout">
+      <NavBar />
+      <main className="app-content">
+        <Routes>
+          <Route path="/" element={<RecipeList recipes={recipes} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}/>} />
+          <Route path="/recipes/new" element={<RecipeForm handleAddRecipe={handleAddRecipe} />} />
+          <Route path="/my-recipes" element={<RecipeList recipes={recipes.filter((recipe)=> recipe.author._id === userId)} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}/>} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}  />} />
+          <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/followers" element={<Followers />} />
+        </Routes>
+      </main>
+    </div>
+  ) : (
+    <>
+      <Routes>
+        <Route path="/" element={<PublicHome />} />
+        <Route path="/sign-up" element={<SignUpForm />} />
+        <Route path="/sign-in" element={<SignInForm />} />
+      </Routes>
+    </>
+  );
+};
 
 export default App;
 
