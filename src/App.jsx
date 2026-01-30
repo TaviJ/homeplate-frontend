@@ -85,13 +85,13 @@ const App = () => {
     const payload= buildPayload(recipeFormData)
     const newRecipe= await recipeService.create(payload);
     setRecipes([newRecipe, ...recipes])
-    navigate("/recipes");
+    navigate(`/recipes/${newRecipe._id}`);
   };
 
   const handleDeleteRecipe = async(recipeId) =>{
     const deletedRecipe = await recipeService.deleteRecipe(recipeId)
     setRecipes(recipes.filter((recipe)=>recipe._id !== deletedRecipe._id));
-    navigate('/recipes');
+    navigate("/my-recipes");
   }
 
   const handleUpdateRecipe = async (recipeId, recipeFormData) => {
@@ -150,8 +150,8 @@ const App = () => {
           <Route path="/my-recipes" element={<RecipeList recipes={recipes.filter((recipe)=> recipe.author._id === userId)} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}/>} />
           <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}  />} />
           <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/followers" element={<Followers />} />
+          <Route path="/profile" element={<ProfilePage recipes={recipes} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow} />} />
         </Routes>
       </main>
     </div>

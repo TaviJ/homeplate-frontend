@@ -1,26 +1,34 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import * as userService from "../../services/userService";
+import RecipeList from "../RecipeList/RecipeList";
+import "./ProfilePage.css";
 
-const ProfilePage = ({ recipes }) => {
+const ProfilePage = ({
+  recipes,
+  toggleLike,
+  followingIds,
+  handleFollow,
+}) => {
   const { user, setUser } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const [newBio, setNewBio] = useState(user?.bio || "");
 
   if (!user || !recipes) {
-    return <p>Loading profile...</p>;
+    return <p className="loading-text">Loading profile...</p>;
   }
 
-  // Filter only recipes of the logged-in user
+  // ONLY this user's recipes
   const userRecipes = recipes.filter(
     (recipe) => recipe.author._id === user._id
   );
 
-  // Save bio
   const handleSaveBio = async () => {
     try {
-      const updatedUser = await userService.updateProfile(user._id, { bio: newBio });
-      setUser(updatedUser); // update context immediately
+      const updatedUser = await userService.updateProfile(user._id, {
+        bio: newBio,
+      });
+      setUser(updatedUser);
       setIsEditing(false);
     } catch (err) {
       console.log("Error updating bio:", err);
@@ -28,42 +36,58 @@ const ProfilePage = ({ recipes }) => {
   };
 
   return (
-    <main>
-      <h1>{user.username}'s Profile</h1>
+    <main className="profile-page">
+      <h1 className="profile-title">{user.username}'s Profile</h1>
 
-      <section>
-        <h3>About:</h3>
+      {/* BIO SECTION */}
+      <section className="profile-bio">
+        <h3>About</h3>
+
         {isEditing ? (
           <>
             <textarea
+              className="bio-textarea"
               value={newBio}
               onChange={(e) => setNewBio(e.target.value)}
               rows={4}
-              cols={50}
             />
-            <br />
-            <button onClick={handleSaveBio}>Save</button>
-            <button onClick={() => setIsEditing(false)}>Cancel</button>
+            <div className="bio-buttons">
+              <button className="btn-edit" onClick={handleSaveBio}>
+                Save
+              </button>
+              <button
+                className="btn-create-recipe btn-cancel-form" 
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </>
         ) : (
           <>
-            <p>{user.bio && user.bio.trim() ? user.bio : "No bio yet"}</p>
-            <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+            <p className="bio-text">
+              {user.bio?.trim() || "No bio yet"}
+            </p>
+            <button
+              className="btn-edit"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </button>
           </>
         )}
       </section>
 
-      <section>
+      {/* RECIPES SECTION — reused homepage layout */}
+      <section className="profile-recipes">
         <h2>My Recipes</h2>
-        {userRecipes.length > 0 ? (
-          <ul>
-            {userRecipes.map((recipe) => (
-              <li key={recipe._id}>{recipe.title}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>You haven't added any recipes yet.</p>
-        )}
+
+        <RecipeList
+          recipes={userRecipes}
+          toggleLike={toggleLike}
+          followingIds={followingIds}
+          handleFollow={handleFollow}
+        />
       </section>
     </main>
   );
