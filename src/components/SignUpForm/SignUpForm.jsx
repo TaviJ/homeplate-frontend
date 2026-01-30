@@ -1,12 +1,14 @@
 
 
 import { useState, useContext } from 'react';
+import { Link } from 'react-router';
 import { useNavigate } from 'react-router';
 import { signUp } from '../../services/authService';
 
 import { UserContext } from '../../contexts/UserContext';
 import './SignUpForm.css';
 import signinPhoto from "../../assets/signup.jpg"
+
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -87,6 +89,9 @@ const SignUpForm = () => {
         <div>
           <button className='signup__btn' onClick={isFormInvalid()}>Sign Up</button>
           <button className= "cancel__btn" onClick={() => navigate('/')}>Cancel</button>
+          <p>Already have an account? {' '} 
+            <Link to="/sign-in">Sign in!</Link>
+          </p>
         </div>
       </form>
       </section>
