@@ -9,14 +9,14 @@ import "./publicHome.css";
 export default function PublicHome() {
   return (
     <div className="public-home">
-      {/* Top bar */}
+     
       <header className="public-home__header">
         <h2 className="logo">HomePlate</h2>
         <Link to="/sign-in" className="btn btn-primary">
           Log in
         </Link>
       </header>
- {/* Main section */}
+ 
       <main className="public-home__main">
         <section className="main">
           <h1>
@@ -39,7 +39,7 @@ export default function PublicHome() {
             </Link>
           </div>
         </section>
-          {/* Features */}
+      
         <section className="features">
           <FeatureCard image={foodImage} title={'Thousands of recipes'} description={'Explore recipes for all occasions and tastes'} />
           
@@ -49,7 +49,7 @@ export default function PublicHome() {
          
           
         </section>
-  {/* Bottom  */}
+  
         <div className="bottom">
           <Link to="/sign-up" className="btn btn-outline">
             Create account

@@ -150,7 +150,9 @@ const App = () => {
           <Route path="/my-recipes" element={<RecipeList recipes={recipes.filter((recipe)=> recipe.author._id === userId)} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}/>} />
           <Route path="/recipes/:recipeId" element={<RecipeDetails handleDeleteRecipe={handleDeleteRecipe} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow}  />} />
           <Route path="/recipes/:recipeId/edit" element={<RecipeForm handleUpdateRecipe={handleUpdateRecipe} />} />
-          <Route path="/profile" element={<ProfilePage recipes={recipes} />} />
+          <Route path="/profile" element={<ProfilePage recipes={recipes} toggleLike={toggleLike} followingIds={followingIds} handleFollow={handleFollow} />} />
+
+
           <Route path="/follow" element={<Follow />} />
         </Routes>
       </main>
