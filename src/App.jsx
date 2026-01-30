@@ -23,13 +23,21 @@ const App = () => {
   const [recipes, setRecipes] = useState([])
   const [followingIds, setFollowingIds] = useState(new Set());
 
-  useEffect(()=>{
-    const fetchAllRecipes = async () =>{
-      const recipesData = await recipeService.index();
-      setRecipes(recipesData)
-    }
-    fetchAllRecipes()
-  },[])
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchAllRecipes = async () => {
+      try {
+        const recipesData = await recipeService.index();
+        setRecipes(Array.isArray(recipesData) ? recipesData : []);
+      } catch (err) {
+        console.log(err);
+        setRecipes([]);
+      }
+    };
+
+    fetchAllRecipes();
+  }, [userId]);
 
   useEffect(()=>{
     const fetchMyFollowing = async () =>{
